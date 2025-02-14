@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define CAPACIDADE 50
+
+typedef struct {
+    int itens[CAPACIDADE];
+    int total;
+} Colecao;
+
+// Inicializa a coleção vazia
+void iniciarColecao(Colecao *c) {
+    c->total = 0;
+}
+
+// Verifica se a coleção está vazia
+int estaVazia(Colecao *c) {
+    return c->total == 0;
+}
+
+// Verifica se a coleção está cheia
+int estaCheia(Colecao *c) {
+    return c->total == CAPACIDADE;
+}
+
+// Retorna a quantidade de elementos na coleção
+int obterQuantidade(Colecao *c) {
+    return c->total;
+}
+
+// Recupera um item de determinada posição
+int recuperarItem(Colecao *c, int posicao) {
+    if (posicao < 1 || posicao > c->total) {
+        printf("Posição inválida!\n");
+        return -1;
+    }
+    return c->itens[posicao - 1];
+}
+
+// Atualiza o valor de um item na coleção
+void atualizarItem(Colecao *c, int posicao, int novoValor) {
+    if (posicao < 1 || posicao > c->total) {
+        printf("Posição inválida!\n");
+        return;
+    }
+    c->itens[posicao - 1] = novoValor;
+}
+
+// Adiciona um item à coleção
+void adicionarItem(Colecao *c, int posicao, int valor) {
+    if (estaCheia(c)) {
+        printf("A coleção atingiu sua capacidade máxima!\n");
+        return;
+    }
+    if (posicao < 1 || posicao > c->total + 1) {
+        printf("Posição inválida!\n");
+        return;
+    }
+    for (int i = c->total; i >= posicao; i--) {
+        c->itens[i] = c->itens[i - 1];
+    }
+    c->itens[posicao - 1] = valor;
+    c->total++;
+}
+
+// Remove um item da coleção
+void removerItem(Colecao *c, int posicao) {
+    if (estaVazia(c)) {
+        printf("A coleção está vazia!\n");
+        return;
+    }
+    if (posicao < 1 || posicao > c->total) {
+        printf("Posição inválida!\n");
+        return;
+    }
+    for (int i = posicao - 1; i < c->total - 1; i++) {
+        c->itens[i] = c->itens[i + 1];
+    }
+    c->total--;
+}
+
+// Exibe os itens da coleção
+void mostrarColecao(Colecao *c) {
+    printf("Itens na lista: ");
+    for (int i = 0; i < c->total; i++) {
+        printf("%d ", c->itens[i]);
+    }
+    printf("\n");
+}
+
+// Função principal
+int main() {
+    Colecao minhaColecao;
+    iniciarColecao(&minhaColecao);
+    
+    adicionarItem(&minhaColecao, 1, 15);
+    adicionarItem(&minhaColecao, 2, 25);
+    adicionarItem(&minhaColecao, 3, 35);
+    mostrarColecao(&minhaColecao);
+    
+    removerItem(&minhaColecao, 2);
+    mostrarColecao(&minhaColecao);
+    
+    atualizarItem(&minhaColecao, 2, 55);
+    mostrarColecao(&minhaColecao);
+    
+    return 0;
+}
